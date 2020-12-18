@@ -29,6 +29,7 @@ public class FileTraverseTask extends RecursiveAction implements Callable<Void> 
 
     @Override
     protected void compute() {
+        System.out.println("FileTraverseTask compute");
         List<TraverseTask> tasks = fileCache.stream()
                 .flatMap((Function<FileData, ObservableSource<TraverseTask>>) fileData ->
                         Observable.create(emitter -> {

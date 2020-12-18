@@ -24,6 +24,7 @@ public class TransformHook {
                                 !(transformName + "Hook").equalsIgnoreCase(targetTransform.getName())) {
                             continue;
                         }
+                        //根据productFlavors和buildTypes不同可能找到多个这样的Task
                         ProxyTransform proxyTransform;
                         if (targetTransform instanceof ProxyTransform) {
                             proxyTransform = (ProxyTransform) targetTransform;

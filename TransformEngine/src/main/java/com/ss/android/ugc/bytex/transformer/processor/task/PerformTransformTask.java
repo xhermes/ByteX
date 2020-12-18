@@ -25,9 +25,11 @@ public class PerformTransformTask extends RecursiveAction {
     @Override
     protected void compute() {
         if (outputFile) {
+            System.out.println("PerformTransformTask compute outputFile 构造FileTransformTask");
             List<FileTransformTask> tasks = source.map(cache -> new FileTransformTask(context, cache, processors)).collect(Collectors.toList());
             invokeAll(tasks);
         } else {
+            System.out.println("PerformTransformTask compute 构造PerformTraverseTask");
             PerformTraverseTask traverseTask = new PerformTraverseTask(source, processors);
             invokeAll(traverseTask);
         }

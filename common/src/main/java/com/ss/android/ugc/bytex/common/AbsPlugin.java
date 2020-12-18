@@ -63,9 +63,11 @@ public abstract class AbsPlugin<E extends BaseExtension> implements Plugin<Proje
     }
 
     @Override
+    //由于继承关系，所有的子plugin都会走这个关键方法
     public final void apply(@NotNull Project project) {
         GlobalByteXBuildListener.INSTANCE.onByteXPluginApply(project, this);
         this.project = project;
+        //原生的Transform注册原理就是找到AppExtension然后调用registerExtension
         this.android = project.getExtensions().getByType(AppExtension.class);
         ProjectOptions.INSTANCE.init(project);
         GlobalWhiteListManager.INSTANCE.init(project);
@@ -78,18 +80,22 @@ public abstract class AbsPlugin<E extends BaseExtension> implements Plugin<Proje
         onApply(project);
         String hookTransformName = hookTransformName();
         if (hookTransformName != null) {
+            //!!!!!??????看到coveragePlugin有传入DexBuilder，这是要hookDexBuilder？
             TransformHook.inject(project, android, this);
         } else {
             if (!alone()) {
                 try {
                     ByteXExtension byteX = project.getExtensions().getByType(ByteXExtension.class);
+                    //原生是往AppExtension中注册，这里byteX自己搞了个ByteXExtension，让所有需要合成的插件都往这里注册
                     byteX.registerPlugin(this);
                     isRunningAlone = false;
                 } catch (UnknownDomainObjectException e) {
+                    //如果失败了还是注册到原生的Extension中
                     android.registerTransform(getTransform());
                     isRunningAlone = true;
                 }
             } else {
+                //插件标记了alone的话，直接注册到原生的Extension中，相当于在这个合成Transform之外独立运行
                 android.registerTransform(getTransform());
                 isRunningAlone = true;
             }

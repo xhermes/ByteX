@@ -19,6 +19,7 @@ public class PerformTraverseTask extends RecursiveAction {
 
     @Override
     protected void compute() {
+        System.out.println("PerformTraverseTask compute");
         List<FileTraverseTask> tasks = source.map(cache -> new FileTraverseTask(cache, processors)).collect(Collectors.toList());
         invokeAll(tasks);
     }

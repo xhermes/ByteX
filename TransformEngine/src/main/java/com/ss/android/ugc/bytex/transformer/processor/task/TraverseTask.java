@@ -25,6 +25,7 @@ public class TraverseTask extends RecursiveAction implements Callable<Void> {
 
     @Override
     protected void compute() {
+        System.out.println("TraverseTask compute");
         try {
             Input input = new Input(fileCache.getContent(), file);
             ProcessorChain chain = new ProcessorChain(processors, input, 0);
